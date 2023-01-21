@@ -11,10 +11,11 @@
         Item {{ n }}
       </v-tab>
     </v-tabs>
-    <v-btn icon="mdi-plus" variant="text" class="ms-2" @click="length++" />
+    <v-btn icon="mdi-plus" variant="text" class="ms-2" @click="length++"/>
     <v-spacer></v-spacer>
     <span>Chat Terminal</span>
-    <v-btn icon="mdi-account" variant="text" class="ms-2"></v-btn>
+    <v-btn icon="mdi-account" variant="text" class="ms-2" to="/login"></v-btn>
+    <v-btn icon="mdi-logout" variant="text" class="ms-2" @click="logOut"></v-btn>
   </v-system-bar>
 </template>
 
@@ -31,6 +32,20 @@ export default {
     length (val) {
       this.tab = val - 1
     },
-  }
+  },
+  methods: {
+    logOut(){
+      fetch("/api/logout",
+      {method: "GET"})
+      .then(response => response.json())
+      .then(data => {
+        if (data.validation == true) {
+          alert("logout performed")
+        }else {
+          alert("you are already logout")
+        }
+      })
+    }
+  },
 }
 </script>

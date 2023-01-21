@@ -42,7 +42,7 @@ class UserChat(db.Model):
     
 
 
-class RegisterForm(FlaskForm):
+class RegisterFormFlask(FlaskForm):
     username = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
 
@@ -57,6 +57,14 @@ class RegisterForm(FlaskForm):
         if existing_user_username:
             raise ValidationError(
                 'That username already exists. Please choose a different one.')
+            
+def validate_username(username):
+    existing_user_username = User.query.filter_by(
+        username=username).first()
+    if existing_user_username:
+        raise ValidationError(
+            'That username already exists. Please choose a different one.')
+    return True
 
 
 class LoginForm(FlaskForm):
@@ -74,52 +82,56 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/api/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user)
-                return redirect(url_for('dashboard'))
-    return render_template('login.html', form=form)
+    username = request.args.get('username')
+    passwd = request.args.get('password')
+    print(username, passwd)
+    user = User.query.filter_by(username=username).first()
+    if user:
+        if bcrypt.check_password_hash(user.password, passwd):
+            login_user(user)
+            return {'validation': True}
+    return {'validation': True}
 
 
-@app.route('/dashboard', methods=['GET', 'POST'])
+@app.route('/api/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
     return render_template('dashboard.html')
 
 
-@app.route('/logout', methods=['GET', 'POST'])
-@login_required
+@app.route('/api/logout', methods=['GET', 'POST'])
 def logout():
-    logout_user()
-    return redirect(url_for('login'))
+    if current_user.is_authenticated:
+        logout_user()
+        return {'validation': True}
+    return {'validation': False}
+        
+    
 
-
-@ app.route('/register', methods=['GET', 'POST'])
+@ app.route('/api/register', methods=['GET', 'POST'])
 def register():
-    form = RegisterForm()
-
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+    username = request.args.get('username')
+    passwd = request.args.get('password')
+    print(username, passwd)
+    if validate_username(username):
+        print("username valid")
+        hashed_password = bcrypt.generate_password_hash(passwd)
+        new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login'))
+        return {'validation': True}
+    return {'validation': False}
 
-    return render_template('register.html', form=form)
-
-@app.route('/nwchat', methods=['GET', 'POST'])
+@app.route('/api/nwchat', methods=['GET', 'POST'])
 def new_chat():
     user_id = request.args.get('user_id')
     nchat = UserChat(user_id=user_id)
     db.session.add(nchat)
     db.session.commit()
     
-@app.route('/nwmessage', methods=['GET', 'POST'])
+@app.route('/api/nwmessage', methods=['GET', 'POST'])
 def new_message():
     user_id = request.args.get('user_id')
     chat_id = request.args.get('chat_id')
@@ -129,6 +141,19 @@ def new_message():
     db.session.commit()
     nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
     db.session.add(nchat)
+    db.session.commit()
+    
+@app.route('/api/dchat', methods=['GET', 'POST'])
+def delete_chat():
+    user_id = request.args.get('user_id')
+    chat_id = request.args.get('chat_id')
+    UserChat.query.filter(UserChat.user_id == user_id, UserChat.id == chat_id).delete()
+    db.session.commit()
+    
+@app.route('/api/dmessage', methods=['GET', 'POST'])
+def delete_message():
+    message_id = request.args.get('message_id')
+    Message.query.filter(Message.id >= message_id).delete()
     db.session.commit()
 
 if __name__ == "__main__":
