@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -28,6 +28,18 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    
+class Message(db.Model):
+    __tablename__ = "messages"
+    id = db.Column(db.Integer, primary_key=True)
+    msg = db.Column(db.String(200), nullable=False)
+    
+class UserChat(db.Model):
+    __tablename__ = "chats"
+    user_id = db.Column(db.ForeignKey("user.id"), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    message_id = db.Column(db.ForeignKey("messages.id"), nullable=True)
+    
 
 
 class RegisterForm(FlaskForm):
@@ -99,6 +111,25 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
+
+@app.route('/nwchat', methods=['GET', 'POST'])
+def new_chat():
+    user_id = request.args.get('user_id')
+    nchat = UserChat(user_id=user_id)
+    db.session.add(nchat)
+    db.session.commit()
+    
+@app.route('/nwmessage', methods=['GET', 'POST'])
+def new_message():
+    user_id = request.args.get('user_id')
+    chat_id = request.args.get('chat_id')
+    message = request.args.get('message')
+    nmsg = Message(msg=message)
+    db.session.add(nmsg)
+    db.session.commit()
+    nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
+    db.session.add(nchat)
+    db.session.commit()
 
 if __name__ == "__main__":
     app.run(port=4000, debug=True)
