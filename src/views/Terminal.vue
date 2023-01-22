@@ -1,30 +1,23 @@
 <template>
   <div class="terminal">
     <div class="input">
-      <v-text-field
-        v-model="input"
-        variant="plain"
-        dense
-        @keydown.enter="send"
-      />
-
+      <TerminalInput :tab="abc"/>
     </div>
   </div>
 </template>
 
 <script>
+
+  import TerminalInput from "@/layouts/Input.vue";
+
   export default {
-    components: { },
+    components: {TerminalInput},
     data() {
       return {
-        input: ''
+        abc: "abc"
       }
     },
     methods: {
-      send() {
-        console.log(this.input)
-        this.input = ''
-      }
     }
   }
 </script>

@@ -4,11 +4,12 @@
       v-model="tab"
     >
       <v-tab
-        v-for="n in length"
+        v-for="(n) in length"
         :key="n"
         :value="n"
       >
         Item {{ n }}
+        <v-btn v-if="this.length > 1" icon="mdi-close" variant="text" class="ms-2" @click="length--" />
       </v-tab>
     </v-tabs>
     <v-btn icon="mdi-plus" variant="text" class="ms-2" @click="length++"/>
@@ -39,9 +40,9 @@ export default {
       {method: "GET"})
       .then(response => response.json())
       .then(data => {
-        if (data.validation == true) {
+        if (data.validation === true) {
           alert("logout performed")
-        }else {
+        } else {
           alert("you are already logout")
         }
       })

@@ -4,7 +4,7 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 // Styles
-import './styles/global.css';
+import './styles/global.scss';
 
 // Components
 import App from './App.vue'
