@@ -49,7 +49,7 @@ export default {
                 .then(response => response.json())
                 .then(data => {
                     if (data.validation == true){
-                        router.push("/login")
+                      this.$router.push("/login")
                     }
                 })
         }

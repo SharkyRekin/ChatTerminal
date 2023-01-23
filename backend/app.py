@@ -145,16 +145,18 @@ def new_chat():
     
 @app.route('/api/nwmessage', methods=['GET', 'POST'])
 def new_message():
-    user_id = request.args.get('user_id')
-    chat_id = request.args.get('chat_id')
+    #user_id = request.args.get('user_id')
+    #chat_id = request.args.get('chat_id')
     message = request.args.get('message')
-    nmsg = Message(msg=message)
-    db.session.add(nmsg)
-    db.session.commit()
-    nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
-    db.session.add(nchat)
-    db.session.commit()
-    return {'respMessage':communicate(message)}
+    buff = communicate(message)
+    print(buff)
+#     nmsg = Message(msg=message)
+#     db.session.add(nmsg)
+#     db.session.commit()
+#     nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
+#     db.session.add(nchat)
+#     db.session.commit()
+    return {'respMessage': buff}
     
 @app.route('/api/dchat', methods=['GET', 'POST'])
 def delete_chat():

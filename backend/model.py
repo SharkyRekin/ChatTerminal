@@ -6,7 +6,7 @@ import torch
 model = BloomForCausalLM.from_pretrained("bigscience/bloom-560m")
 tokenizer = BloomTokenizerFast.from_pretrained("bigscience/bloom-560m")
 
-result_length = 50
+result_length = 5
 
 def communicate(prompt:str):
     inputs = tokenizer(prompt, return_tensors="pt")

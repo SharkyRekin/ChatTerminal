@@ -1,5 +1,6 @@
 <template>
   <v-text-field
+    v-if="this.shell.command !== 'chat'"
     pa-0
     v-model="input"
     variant="plain"
@@ -11,15 +12,17 @@
       <PS />
     </template>
   </v-text-field>
+  <Chat v-if="this.shell.command === 'chat'" />
 </template>
 
 <script>
 import PS from "@/layouts/PS.vue";
 import {useShell} from "@/store/shell";
+import Chat from "@/layouts/Chat.vue";
 
 export default {
   name: "TerminalInput",
-  components: {PS},
+  components: {Chat, PS},
   data() {
     return {
       input: ''

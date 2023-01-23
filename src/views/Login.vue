@@ -49,7 +49,7 @@ export default {
                     if (data.username != 'guest'){
                       this.userAttr.username = data.username;
                       this.userAttr.id = data.id;
-                      router.push("/")
+                      this.$router.push("/")
                     }
                     console.log(this.userAttr.username);
                 })
