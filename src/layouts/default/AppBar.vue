@@ -41,9 +41,10 @@ export default {
       .then(response => response.json())
       .then(data => {
         if (data.validation === true) {
-          alert("logout performed")
+          alert("logout performed");
+          location.reload();
         } else {
-          alert("you are already logout")
+          alert("you are already logout");
         }
       })
     }

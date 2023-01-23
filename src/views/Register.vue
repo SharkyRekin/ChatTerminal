@@ -46,7 +46,7 @@ export default {
         submitForm() {
             fetch("/api/register?username=" + this.username + "&password=" + this.password,
                 { method: "GET" })
-                .then(response => {response.json())
+                .then(response => response.json())
                 .then(data => {
                     if (data.validation == true){
                         router.push("/login")

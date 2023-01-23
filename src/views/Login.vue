@@ -30,6 +30,7 @@
 
 <script>
 import router from '@/router';
+import { userAttributes } from '@/store/user';
 
 export default {
     data() {
@@ -44,11 +45,19 @@ export default {
                 { method: "GET" })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.validation === true){
-                        router.push("/")
+                  console.log(data);
+                    if (data.username != 'guest'){
+                      this.userAttr.username = data.username;
+                      this.userAttr.id = data.id;
+                      router.push("/")
                     }
+                    console.log(this.userAttr.username);
                 })
         }
+    },
+    setup() {
+      const userAttr = userAttributes();
+      return { userAttr }
     }
 }
 </script>

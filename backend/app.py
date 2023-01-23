@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
+from model import communicate
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -28,18 +29,23 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
 class Message(db.Model):
     __tablename__ = "messages"
     id = db.Column(db.Integer, primary_key=True)
     msg = db.Column(db.String(200), nullable=False)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
 class UserChat(db.Model):
     __tablename__ = "chats"
     user_id = db.Column(db.ForeignKey("user.id"), primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     message_id = db.Column(db.ForeignKey("messages.id"), nullable=True)
-    
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
 class RegisterFormFlask(FlaskForm):
@@ -91,8 +97,14 @@ def login():
     if user:
         if bcrypt.check_password_hash(user.password, passwd):
             login_user(user)
-            return {'validation': True}
-    return {'validation': True}
+            return {
+            'id':current_user.id,
+            'username':current_user.username,
+            }
+    return {
+            'id':0,
+            'username':'guest',
+            }
 
 
 @app.route('/api/dashboard', methods=['GET', 'POST'])
@@ -155,6 +167,11 @@ def delete_message():
     message_id = request.args.get('message_id')
     Message.query.filter(Message.id >= message_id).delete()
     db.session.commit()
+    
+@app.route('/api/current_user', methods=["GET","POST"])
+def get_current_user():
+    print(UserChat.query.filter(UserChat.user_id == current_user.id).all())
+    return {'validation': True}
 
 if __name__ == "__main__":
     app.run(port=4000, debug=True)
