@@ -1,8 +1,8 @@
-export const History = (idh, commands, outputs) => {
+export const History = (id, command, output) => {
   return {
-    id: idh,
-    command: commands,
-    output: outputs,
+    id: id,
+    command: command,
+    output: output,
   }
 }
 

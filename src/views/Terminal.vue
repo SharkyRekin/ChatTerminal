@@ -1,6 +1,7 @@
 <template>
   <div class="terminal">
     <div class="input">
+      <History />
       <TerminalInput :tab="abc"/>
     </div>
   </div>
@@ -9,9 +10,10 @@
 <script>
 
   import TerminalInput from "@/layouts/Input.vue";
+  import History from "@/layouts/History.vue";
 
   export default {
-    components: {TerminalInput},
+    components: {History, TerminalInput},
     data() {
       return {
         abc: "abc"

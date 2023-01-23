@@ -1,18 +1,18 @@
 <template>
-  <v-text-field
-    v-if="this.shell.command !== 'chat'"
-    pa-0
-    v-model="input"
-    variant="plain"
-    dense
-    @keydown.enter="send"
-    autofocus
-    density="compact">
-    <template v-slot:prepend>
-      <PS />
-    </template>
-  </v-text-field>
-  <Chat v-if="this.shell.command === 'chat'" />
+  <v-row class="pa-2">
+    <PS />
+    <v-text-field
+      v-if="this.shell.command !== 'chat'"
+      class="pa-0"
+      v-model="input"
+      variant="plain"
+      dense
+      @keydown.enter="send"
+      autofocus
+      density="compact">
+    </v-text-field>
+    <Chat v-if="this.shell.command === 'chat'" />
+  </v-row>
 </template>
 
 <script>
