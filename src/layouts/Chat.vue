@@ -25,14 +25,10 @@ export default {
   },
   methods: {
     send() {
-      fetch(`/api/nwmessage?message=${this.input}`, {
-        method: 'GET'
-      }).then(response => {
-        response.json();
-        console.log(response)
-      }).then(data => {
-        console.log(data)
-      });
+      fetch(`/api/nwmessage?message=${this.input}`,
+        {method: 'GET'})
+        .then(response => response.json())
+        .then(data => {console.log(data)});
     }
   }
 }
