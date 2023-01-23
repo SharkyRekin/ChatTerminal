@@ -154,6 +154,7 @@ def new_message():
     nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
     db.session.add(nchat)
     db.session.commit()
+    return {'respMessage':communicate(message)}
     
 @app.route('/api/dchat', methods=['GET', 'POST'])
 def delete_chat():
