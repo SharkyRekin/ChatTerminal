@@ -1,7 +1,9 @@
-export const History = {
-  id: Number,
-  command: String,
-  output: String
+export const History = (idh, commands, outputs) => {
+  return {
+    id: idh,
+    command: commands,
+    output: outputs,
+  }
 }
 
 

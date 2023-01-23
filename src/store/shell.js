@@ -8,7 +8,8 @@ export const useShell = defineStore('shell', {
     command: '',
   }),
   actions: {
-    addHistory(history) {
+    addHistory(output) {
+      const history = History(this.history.length, this.command, output)
       this.history.push(history)
     },
     clearHistory() {
@@ -21,7 +22,10 @@ export const useShell = defineStore('shell', {
       const [cmd, args] = this.command.split(' ')
       switch (cmd) {
         case 'clear':
-          this.clearHistory()
+          this.clearHistory();
+          break
+        case '':
+          this.addHistory('');
           break
         default:
           if (Object.keys(bin).indexOf(cmd) === -1) {
@@ -29,7 +33,7 @@ export const useShell = defineStore('shell', {
           } else {
             try {
               const output = await bin[cmd](args);
-              console.log(output)
+              console.log(output);
               this.addHistory(output);
             } catch (error) {
               this.addHistory(error.message);
