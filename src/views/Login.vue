@@ -11,7 +11,7 @@
               <v-form lazy-validation @submit.prevent="submitForm">
                 <v-text-field label="Enter your name" name="name" v-model="username" prepend-inner-icon="mdi-account"
                                 type="text" class="rounded-0" outlined></v-text-field>
-                <v-text-field label="Enter your password" name="password" v-model="password" prepend-inner-icon="mdi-lock" type="password" suffix="| Forgot?" class="rounded-0" outlined></v-text-field>
+                <v-text-field label="Enter your password" name="password" v-model="password" prepend-inner-icon="mdi-lock" type="password" class="rounded-0" outlined></v-text-field>
                 <v-btn class="rounded-0" color="#000000" x-large type="submit" block dark>Login</v-btn>
                 <v-card-actions class="text--secondary">
                   <v-spacer></v-spacer>

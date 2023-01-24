@@ -16,7 +16,6 @@
                             <v-btn class="rounded-0" color="#000000" type="submit" x-large block dark>Register</v-btn>
                             <v-card-actions class="text--secondary">
                                 <v-spacer></v-spacer>
-                                <!-- <router-link :to="{ name: 'SignUp' }">Sign Up</router-link> -->
                                 Already have an account? <router-link to="/login" class="pl-2" style="color: #000000">Sign In</router-link>
                             </v-card-actions>
                         </v-form>
@@ -33,8 +32,6 @@
 </template>
 
 <script>
-import router from '@/router';
-
 export default {
     data() {
         return {

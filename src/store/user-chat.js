@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 
-export const userAttributes = defineStore('userAttr', {
+export const userChat = defineStore('userChat', {
     state: () => ({
         id : 0,
-        username : 'guest'
+        messages : []
     })
 })

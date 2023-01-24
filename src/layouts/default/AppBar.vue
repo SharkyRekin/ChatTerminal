@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { userChat } from '@/store/user-chat';
 
 export default {
   data() {
@@ -29,9 +30,14 @@ export default {
       length: 1
     }
   },
+  setup() {
+      const userchat = userChat();
+      return { userchat }
+  },
   watch: {
     length (val) {
-      this.tab = val - 1
+      this.tab = val - 1;
+      this.userchat.id = this.tab;
     },
   },
   methods: {
