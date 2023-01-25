@@ -47,6 +47,7 @@ export default {
           this.messages.push({response: 'Rompish 😴', message: this.input});
         }).finally(() => this.input = '');
       } else {
+        this.shell.history[this.shell.history.length - 1].output = 'Bye bye';
         this.shell.setCommand('exit');
       }
     }
