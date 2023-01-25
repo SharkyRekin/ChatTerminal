@@ -35,6 +35,7 @@ class User(db.Model, UserMixin):
 class Message(db.Model):
     __tablename__ = "messages"
     id = db.Column(db.Integer, primary_key=True)
+    chat_id = db.Column(db.ForeignKey("chats.id"), nullable=False)
     msg = db.Column(db.String(200), nullable=False)
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -43,7 +44,7 @@ class UserChat(db.Model):
     __tablename__ = "chats"
     user_id = db.Column(db.ForeignKey("user.id"), primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    message_id = db.Column(db.ForeignKey("messages.id"), nullable=True)
+    #message_id = db.Column(db.ForeignKey("messages.id"), nullable=True)
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
@@ -150,12 +151,12 @@ def new_message():
     message = request.args.get('message')
     buff = communicate(message)
     print(user_id, chat_id)
-    nmsg = Message(msg=message)
+    nmsg = Message(msg=message, chat_id=chat_id)
     db.session.add(nmsg)
     db.session.commit()
-    nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
-    db.session.add(nchat)
-    db.session.commit()
+    #nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
+    #db.session.add(nchat)
+    #db.session.commit()
     return {'response': buff}
     
 @app.route('/api/dchat', methods=['GET', 'POST'])
