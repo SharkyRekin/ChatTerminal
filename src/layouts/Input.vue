@@ -1,8 +1,7 @@
 <template>
-  <v-row class="pa-2">
+  <v-row class="pa-2" v-if="this.shell.command !== 'chat'">
     <PS />
     <v-text-field
-      v-if="this.shell.command !== 'chat'"
       class="pa-0"
       v-model="input"
       variant="plain"
@@ -11,7 +10,9 @@
       autofocus
       density="compact">
     </v-text-field>
-    <Chat v-if="this.shell.command === 'chat'" />
+  </v-row>
+  <v-row class="pa-2" v-if="this.shell.command === 'chat'">
+    <Chat />
   </v-row>
 </template>
 
