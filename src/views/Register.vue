@@ -13,17 +13,15 @@
                                 type="text" class="rounded-0" outlined></v-text-field>
                             <v-text-field label="Enter your password" name="password" v-model="password" prepend-inner-icon="mdi-lock"
                                 type="password" class="rounded-0" outlined></v-text-field>
-                            <v-btn class="rounded-0" color="#000000" type="submit" x-large block dark>Register</v-btn>
+                            <v-btn class="rounded-0 text-white" color="#000000" type="submit" x-large block dark>Register</v-btn>
                             <v-card-actions class="text--secondary">
                                 <v-spacer></v-spacer>
-                                Already have an account? <router-link to="/login" class="pl-2" style="color: #000000">Sign In</router-link>
+                                Already have an account? <router-link to="/login" class="pl-2">Sign In</router-link>
                             </v-card-actions>
                         </v-form>
                     </v-card-text>
                     <v-card-actions class="ml-6 mr-6 text-center">
-                        <p>By continuing, you agree to IDA <a href="#" class="pl-2"
-                                style="color: #000000">Policy</a> and <a href="#" class="pl-2"
-                                style="color: #000000">Terms of Use</a></p>
+                      <p>By continuing, you agree to IDA Policy and Terms of Use</p>
                     </v-card-actions>
                 </v-card>
             </v-col>

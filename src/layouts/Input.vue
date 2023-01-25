@@ -1,5 +1,5 @@
 <template>
-  <v-row class="pa-2" v-if="this.shell.command !== 'chat'">
+  <v-row class="pa-2" v-if="this.useApp.shells[this.terminal].command !== 'chat'">
     <PS />
     <v-text-field
       class="pa-0"
@@ -11,15 +11,15 @@
       density="compact">
     </v-text-field>
   </v-row>
-  <v-row class="pa-2" v-if="this.shell.command === 'chat'">
-    <Chat />
+  <v-row class="pa-2" v-if="this.useApp.shells[this.terminal].command === 'chat'">
+    <Chat :terminal="terminal"/>
   </v-row>
 </template>
 
 <script>
 import PS from "@/layouts/PS.vue";
-import {useShell} from "@/store/shell";
 import Chat from "@/layouts/Chat.vue";
+import {useAppStore} from "@/store/app";
 
 export default {
   name: "TerminalInput",
@@ -30,18 +30,18 @@ export default {
     }
   },
   props: {
-    tab: String
+    terminal: Number
   },
   methods: {
     send() {
-      this.shell.setCommand(this.input);
-      this.shell.execute();
+      this.useApp.setCommand(this.terminal, this.input);
+      this.useApp.execute(this.terminal);
       this.input = '';
     }
   },
   setup() {
-    const shell = useShell();
-    return { shell }
+    const useApp = useAppStore();
+    return { useApp }
   },
 }
 </script>

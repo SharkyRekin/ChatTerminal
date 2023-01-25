@@ -1,26 +1,31 @@
 <template>
-  <div class="terminal">
-    <div class="input">
-      <History />
-      <TerminalInput :tab="abc"/>
-    </div>
-  </div>
+  <DefaultBar />
+  <v-main>
+    <v-window v-model="this.useApp.tabs" class="pa-2 terminal">
+      <v-window-item v-for="n in this.useApp.numberTabs" :key="n" :value="n">
+        <History :terminal="n-1" />
+        <TerminalInput :terminal="n-1" />
+      </v-window-item>
+    </v-window>
+  </v-main>
 </template>
 
 <script>
-
   import TerminalInput from "@/layouts/Input.vue";
   import History from "@/layouts/History.vue";
+  import DefaultBar from '@/layouts/AppBar.vue'
+  import {useAppStore} from "@/store/app";
 
   export default {
-    components: {History, TerminalInput},
+    components: {DefaultBar, History, TerminalInput},
     data() {
-      return {
-        abc: "abc"
-      }
+      return {}
     },
-    methods: {
-    }
+    setup() {
+      const useApp = useAppStore();
+      return { useApp }
+    },
+    methods: {}
   }
 </script>
 

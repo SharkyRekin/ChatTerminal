@@ -23,7 +23,7 @@
 <script>
 import { userAttributes } from '@/store/user';
 import { userChat } from '@/store/user-chat';
-import {useShell} from "@/store/shell";
+import { useAppStore } from "@/store/app";
 
 export default {
   name: "Chat",
@@ -47,16 +47,23 @@ export default {
           this.messages.push({response: 'Rompish 😴', message: this.input});
         }).finally(() => this.input = '');
       } else {
-        this.shell.history[this.shell.history.length - 1].output = 'Bye bye';
-        this.shell.setCommand('exit');
+        let res = "";
+        Object.values(this.messages).forEach((data) => {
+          res += `>>> ${data.message} \n ${data.response}\n`;
+        });
+        this.useApp.shells[this.terminal].history[this.useApp.shells[this.terminal].history.length - 1].output = res;
+        this.useApp.setCommand(this.terminal, 'exit');
       }
     }
   },
+  props: {
+    terminal: Number
+  },
   setup() {
     const userAttr = userAttributes();
-    const shell = useShell();
+    const useApp = useAppStore();
     const userchat = userChat();
-    return { userAttr, userchat, shell }
+    return { userAttr, userchat, useApp }
   }
 }
 </script>

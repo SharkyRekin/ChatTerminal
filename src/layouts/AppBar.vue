@@ -1,18 +1,12 @@
 <template>
   <v-system-bar window>
-    <v-tabs
-      v-model="tab"
-    >
-      <v-tab
-        v-for="(n) in length"
-        :key="n"
-        :value="n"
-      >
-        Item {{ n }}
-        <v-btn v-if="this.length > 1" icon="mdi-close" variant="text" class="ms-2" @click="length--" />
+    <v-tabs v-model="this.useApp.tabs" hide-slider height="32">
+      <v-tab v-for="(n) in this.useApp.numberTabs" :key="n" :value="n">
+        Chat {{ n }}
+        <v-icon v-if="this.useApp.numberTabs > 1" class="ms-2" @click="this.useApp.removeTab(n)">mdi-close</v-icon>
       </v-tab>
     </v-tabs>
-    <v-btn icon="mdi-plus" variant="text" class="ms-2" @click="length++"/>
+    <v-btn icon="mdi-plus" variant="text" size="32" @click="this.useApp.addTab()"/>
     <v-spacer></v-spacer>
     <span>Chat Terminal</span>
     <v-btn icon="mdi-account" variant="text" class="ms-2" to="/login"></v-btn>
@@ -22,24 +16,19 @@
 
 <script>
 import { userChat } from '@/store/user-chat';
+import {useAppStore} from "@/store/app";
 
 export default {
+  name: "DefaultBar",
   data() {
-    return {
-      tab: null,
-      length: 1
-    }
+    return {}
   },
   setup() {
       const userchat = userChat();
-      return { userchat }
+      const useApp = useAppStore();
+      return { userchat, useApp }
   },
-  watch: {
-    length (val) {
-      this.tab = val - 1;
-      this.userchat.id = this.tab;
-    },
-  },
+  watch: {},
   methods: {
     logOut(){
       fetch("/api/logout",

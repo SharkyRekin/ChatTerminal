@@ -4,30 +4,22 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
-    children: [
-      {
-        path: '',
-        name: 'Terminal',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Terminal.vue'),
-      },
-      {
-      path: 'tutulutu',
-      name: 'tkt',
-      component: () => import(/* webpackChunkName: "shark" */ '@/views/Shark.vue'),
-      },
-      {
-        path: 'login',
-        name: 'log',
-        component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue'),
-      },
-      {
-        path: 'register',
-        name: 'signup',
-        component: () => import(/* webpackChunkName: "register" */ '@/views/Register.vue'),
-      }
-  
-    ],
+    component: () => import('@/views/Terminal.vue'),
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/Login.vue'),
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/Register.vue'),
+  },
+  {
+    path: '/tutulutu',
+    name: 'tkt',
+    component: () => import('@/views/Shark.vue'),
   },
 ]
 
