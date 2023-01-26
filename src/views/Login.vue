@@ -54,14 +54,18 @@ export default {
                 });
         },
         getChatUser() {
-            fetch("/api/current_user", { method: "GET" })
-                .then(response => response.json())
-                .then(data => {
-                    this.useApp.clearTabs();
-                    Object.values(data.chats).forEach((value) => {
-                        this.useApp.setTab(value.id);
-                    });
+          fetch("/api/current_user", { method: "GET" })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              this.useApp.clearTabs();
+              Object.values(data.chats).forEach((value) => {
+                this.useApp.setTab(value.id);
+                Object.values(value.messages).forEach((elt) => {
+                  this.useApp.addChat(this.useApp.numberTabs-1, elt.msg, elt.output);
                 });
+              });
+            });
         }
     },
     setup() {

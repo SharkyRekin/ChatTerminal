@@ -1,6 +1,6 @@
 <template>
   <v-row class="pa-2" v-if="this.useApp.shells[this.terminal].command !== 'chat'">
-    <PS />
+    <PS :terminal="this.terminal+1"/>
     <v-text-field
       class="pa-0"
       v-model="input"

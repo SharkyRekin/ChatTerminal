@@ -2,7 +2,7 @@
   <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].history" :key="index" class="pa-2">
     <v-col>
       <v-row>
-        <PS /> {{ entry.command }}
+        <PS :terminal="this.terminal+1"/> {{ entry.command }}
       </v-row>
       <v-row>
         <pre> {{ entry.output }} </pre>

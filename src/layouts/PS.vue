@@ -1,7 +1,7 @@
 <template>
   <div>
     <span style="color:#39ff13">
-      {{ this.username }}@gpt
+      {{ this.username }}@chat{{ this.terminal }}
     </span>
     <span >
       :
@@ -20,7 +20,10 @@ export default {
     return {
       username : localStorage.getItem('username')
     }
-  }
+  },
+  props: {
+    terminal: Number
+  },
 }
 </script>
 

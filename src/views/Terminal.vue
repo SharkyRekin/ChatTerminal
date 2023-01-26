@@ -2,7 +2,7 @@
   <DefaultBar />
   <v-main>
     <v-window v-model="this.useApp.tabs" class="pa-2 terminal">
-      <v-window-item v-for="n in this.useApp.numberTabs" :key="n" :value="n">
+      <v-window-item v-for="n in this.useApp.numberTabs" :key="n" :value="n" :transition="false">
         <History :terminal="n-1" />
         <TerminalInput :terminal="n-1" />
       </v-window-item>
