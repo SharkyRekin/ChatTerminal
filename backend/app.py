@@ -26,7 +26,7 @@ def load_user(user_id):
 
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
     def as_dict(self):
@@ -34,7 +34,7 @@ class User(db.Model, UserMixin):
     
 class Message(db.Model):
     __tablename__ = "messages"
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     chat_id = db.Column(db.ForeignKey("chats.id"), nullable=False)
     msg = db.Column(db.String(200), nullable=False)
     def as_dict(self):
@@ -42,8 +42,8 @@ class Message(db.Model):
     
 class UserChat(db.Model):
     __tablename__ = "chats"
-    user_id = db.Column(db.ForeignKey("user.id"), primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey("user.id"))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     #message_id = db.Column(db.ForeignKey("messages.id"), nullable=True)
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -139,10 +139,11 @@ def register():
 
 @app.route('/api/nwchat', methods=['GET', 'POST'])
 def new_chat():
-    user_id = request.args.get('user_id')
+    user_id = request.args.get('user-id')
     nchat = UserChat(user_id=user_id)
     db.session.add(nchat)
     db.session.commit()
+    return {'chatId': nchat.id}
     
 @app.route('/api/nwmessage', methods=['GET', 'POST'])
 def new_message():
@@ -154,17 +155,15 @@ def new_message():
     nmsg = Message(msg=message, chat_id=chat_id)
     db.session.add(nmsg)
     db.session.commit()
-    #nchat = UserChat(user_id=user_id, id=chat_id, message_id=nmsg.id)
-    #db.session.add(nchat)
-    #db.session.commit()
     return {'response': buff}
     
 @app.route('/api/dchat', methods=['GET', 'POST'])
 def delete_chat():
-    user_id = request.args.get('user_id')
-    chat_id = request.args.get('chat_id')
+    user_id = request.args.get('user-id')
+    chat_id = request.args.get('chat-id')
     UserChat.query.filter(UserChat.user_id == user_id, UserChat.id == chat_id).delete()
     db.session.commit()
+    return {'validation':True}
     
 @app.route('/api/dmessage', methods=['GET', 'POST'])
 def delete_message():
