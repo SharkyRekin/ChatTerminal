@@ -173,8 +173,7 @@ def delete_message():
     
 @app.route('/api/current_user', methods=["GET","POST"])
 def get_current_user():
-    print(UserChat.query.filter(UserChat.user_id == current_user.id).all())
-    return {'validation': True}
+    return {"chats" : UserChat.query.filter(UserChat.user_id == current_user.id).all()}
 
 if __name__ == "__main__":
     app.run(port=4000, debug=True)
