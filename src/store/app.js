@@ -2,8 +2,8 @@
 import { defineStore } from 'pinia'
 import { Shell } from "@/interface/shell";
 import { History } from "@/interface/history";
+import { Conversation } from "@/interface/conversation";
 import * as bin from "@/store/commands/utils";
-import {Conversation} from "@/interface/conversation";
 
 export const useAppStore = defineStore('app', {
   state: () => ({
