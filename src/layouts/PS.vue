@@ -14,18 +14,12 @@
 
 <script>
 
-import { userAttributes } from '@/store/user';
-
 export default {
   name: "PS",
   data() {
     return {
-      username : this.userAttr.username
+      username : localStorage.getItem('username')
     }
-  },
-  setup() {
-    const userAttr = userAttributes();
-    return { userAttr }
   }
 }
 </script>

@@ -12,7 +12,7 @@
     </v-text-field>
   </v-row>
   <v-row class="pa-2" v-if="this.useApp.shells[this.terminal].command === 'chat'">
-    <Chat :terminal="terminal"/>
+    <Chat :terminal="terminal" :nb-chat="this.useApp.shells[this.terminal].id"/>
   </v-row>
 </template>
 

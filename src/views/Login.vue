@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { userAttributes } from '@/store/user';
+import {useAppStore} from "@/store/app";
 
 export default {
     data() {
@@ -44,19 +44,29 @@ export default {
                 { method: "GET" })
                 .then(response => response.json())
                 .then(data => {
-                  console.log(data);
-                    if (data.username != 'guest'){
-                      this.userAttr.username = data.username;
-                      this.userAttr.id = data.id;
+                    console.log(data);
+                    if (localStorage.getItem('username') === 'guest'){
+                      localStorage.setItem('username', data.username);
+                      localStorage.setItem('id', data.id);
+                      this.getChatUser();
                       this.$router.push("/")
                     }
-                    console.log(this.userAttr.username);
-                })
+                });
+        },
+        getChatUser() {
+            fetch("/api/current_user", { method: "GET" })
+                .then(response => response.json())
+                .then(data => {
+                    this.useApp.clearTabs();
+                    Object.values(data.chats).forEach((value) => {
+                        this.useApp.setTab(value.id);
+                    });
+                });
         }
     },
     setup() {
-      const userAttr = userAttributes();
-      return { userAttr }
+      const useApp = useAppStore();
+      return { useApp }
     }
 }
 </script>

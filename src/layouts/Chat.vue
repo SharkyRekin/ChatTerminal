@@ -1,5 +1,15 @@
 <template>
   <v-col>
+    <v-row v-for="(entry) in this.useApp.shells[this.terminal].conversation" class="pa-2">
+      <v-col>
+        <v-row>
+          >>> {{ entry.message }}
+        </v-row>
+        <v-row>
+          <pre> {{ entry.output }} </pre>
+        </v-row>
+      </v-col>
+    </v-row>
     <v-row v-for="(entry, index) in this.messages" :key="index" class="pa-2">
       <v-col>
         <v-row>
@@ -37,7 +47,7 @@ export default {
   methods: {
     send() {
       if (this.input !== 'exit') {
-        fetch(`/api/nwmessage?message=${this.input}&user-id=${this.userAttr.id}&chat-id=${this.userchat.id}`,
+        fetch(`/api/nwmessage?message=${this.input}&user-id=${localStorage.getItem("id")}&chat-id=${this.nbChat}`,
           {method: 'GET'})
           .then(response => response.json())
           .then(data => {
@@ -49,7 +59,10 @@ export default {
       } else {
         let res = "";
         Object.values(this.messages).forEach((data) => {
-          res += `>>> ${data.message} \n ${data.response}\n`;
+          this.useApp.addChat(this.terminal, data.message, data.response);
+        });
+        Object.values(this.useApp.shells[this.terminal].conversation).forEach((data) => {
+          res += `>>> ${data.message}\n${data.output}\n`;
         });
         this.useApp.shells[this.terminal].history[this.useApp.shells[this.terminal].history.length - 1].output = res;
         this.useApp.setCommand(this.terminal, 'exit');
@@ -57,7 +70,8 @@ export default {
     }
   },
   props: {
-    terminal: Number
+    terminal: Number,
+    nbChat: Number
   },
   setup() {
     const userAttr = userAttributes();

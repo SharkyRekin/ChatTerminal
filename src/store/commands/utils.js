@@ -5,5 +5,5 @@ export const chat = async (args) => {
 };
 
 export const whoami = async (args) => {
-  return 'guest';
+  return localStorage.getItem('username');
 };

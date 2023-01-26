@@ -37,6 +37,7 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     chat_id = db.Column(db.ForeignKey("chats.id"), nullable=False)
     msg = db.Column(db.String(200), nullable=False)
+    output = db.Column(db.String(), nullable=False)
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
@@ -152,7 +153,7 @@ def new_message():
     message = request.args.get('message')
     buff = communicate(message)
     print(user_id, chat_id)
-    nmsg = Message(msg=message, chat_id=chat_id)
+    nmsg = Message(msg=message, chat_id=chat_id, output=buff)
     db.session.add(nmsg)
     db.session.commit()
     return {'response': buff}
@@ -162,6 +163,7 @@ def delete_chat():
     user_id = request.args.get('user-id')
     chat_id = request.args.get('chat-id')
     UserChat.query.filter(UserChat.user_id == user_id, UserChat.id == chat_id).delete()
+    Message.query.filter(Message.chat_id == chat_id).delete()
     db.session.commit()
     return {'validation':True}
     
@@ -173,7 +175,16 @@ def delete_message():
     
 @app.route('/api/current_user', methods=["GET","POST"])
 def get_current_user():
-    return {"chats" : UserChat.query.filter(UserChat.user_id == current_user.id).all()}
+    chats = []
+    for chat in UserChat.query.filter(UserChat.user_id == current_user.id).all():
+        buff = chat.as_dict()
+        buff['messages'] = []
+        for message in Message.query.filter(Message.chat_id == chat.id).all():
+            buff['messages'].append(message.as_dict())
+        chats.append(buff)
+
+    print(chats)
+    return {"chats" : chats}
 
 if __name__ == "__main__":
     app.run(port=4000, debug=True)
