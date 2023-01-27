@@ -47,9 +47,9 @@ export default {
 
 <style scoped>
 
-.v-text-field >>> .v-field__input {
-    min-height: 0px !important;
-    padding-top: 0px !important;
+.v-text-field:deep(.v-field__input) {
+    min-height: 0 !important;
+    padding-top: 0 !important;
     padding-left: 5px !important
 }
 

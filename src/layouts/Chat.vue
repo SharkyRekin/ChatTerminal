@@ -21,18 +21,14 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-text-field v-model="input" variant="plain" dense @keydown.enter="send" autofocus density="compact">
-        <!-- <template v-slot:prepend> -->
+      <v-text-field v-model="input" variant="plain" dense @keydown.enter="send" autofocus density="compact" :readonly="isWait">
           >>>
-        <!-- </template> -->
       </v-text-field>
     </v-row>
   </v-col>
 </template>
 
 <script>
-import { userAttributes } from '@/store/user';
-import { userChat } from '@/store/user-chat';
 import { useAppStore } from "@/store/app";
 
 export default {
@@ -42,31 +38,48 @@ export default {
     return {
       input: '',
       messages: [],
+      isWait: false
     }
   },
   methods: {
     send() {
+      if (this.isWait) return
       if (this.input !== 'exit') {
-        fetch(`/api/nwmessage?message=${this.input}&user-id=${localStorage.getItem("id")}&chat-id=${this.nbChat}`,
-          {method: 'GET'})
+        this.isWait = true;
+        fetch(`/api/nwmessage`,
+          {method: 'POST',
+            body: JSON.stringify({'message': this.formatMessage(),
+              'user-id': localStorage.getItem("id"),
+              'chat-id': this.nbChat})})
           .then(response => response.json())
           .then(data => {
             this.messages.push({response: data.response, message: this.input});
+            this.useApp.addChat(this.terminal, this.input, data.response);
           }).catch(error => {
             console.log(error);
           this.messages.push({response: 'Rompish 😴', message: this.input});
-        }).finally(() => this.input = '');
+          this.useApp.addChat(this.terminal, this.input, 'Rompish 😴');
+        }).finally(() => {
+          this.input = ''
+          this.isWait = false;
+        });
       } else {
         let res = "";
-        Object.values(this.messages).forEach((data) => {
-          this.useApp.addChat(this.terminal, data.message, data.response);
-        });
         Object.values(this.useApp.shells[this.terminal].conversation).forEach((data) => {
           res += `>>> ${data.message}\n${data.output}\n`;
         });
         this.useApp.shells[this.terminal].history[this.useApp.shells[this.terminal].history.length - 1].output = res;
         this.useApp.setCommand(this.terminal, 'exit');
       }
+    },
+    formatMessage() {
+      let res = "";
+      Object.values(this.useApp.shells[this.terminal].conversation).forEach((data) => {
+        res += `Q: ${data.message}\nA: ${data.output}\n`;
+      });
+      res+= `Q: ${this.input}\nA: `;
+      console.log(res)
+      return res;
     }
   },
   props: {
@@ -74,18 +87,16 @@ export default {
     nbChat: Number
   },
   setup() {
-    const userAttr = userAttributes();
     const useApp = useAppStore();
-    const userchat = userChat();
-    return { userAttr, userchat, useApp }
+    return { useApp }
   }
 }
 </script>
 
 <style scoped>
-.v-text-field >>> .v-field__input {
-    min-height: 0px !important;
-    padding-top: 0px !important;
+.v-text-field:deep(.v-field__input) {
+    min-height: 0 !important;
+    padding-top: 0 !important;
     padding-left: 5px !important
 }
 </style>

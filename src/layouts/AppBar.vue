@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { userChat } from '@/store/user-chat';
 import {useAppStore} from "@/store/app";
 
 export default {
@@ -24,9 +23,8 @@ export default {
     return {}
   },
   setup() {
-      const userchat = userChat();
       const useApp = useAppStore();
-      return { userchat, useApp }
+      return { useApp }
   },
   watch: {},
   methods: {

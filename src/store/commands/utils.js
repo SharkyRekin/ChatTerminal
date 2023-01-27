@@ -1,4 +1,3 @@
-import { userAttributes } from '@/store/user';
 
 export const chat = async (args) => {
   return '';
