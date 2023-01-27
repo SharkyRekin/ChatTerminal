@@ -1,22 +1,12 @@
 <template>
   <v-col>
-    <v-row v-for="(entry) in this.useApp.shells[this.terminal].conversation" class="pa-2">
+    <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].conversation" :key="index" class="pa-2">
       <v-col>
         <v-row>
           >>> {{ entry.message }}
         </v-row>
         <v-row>
           <pre> {{ entry.output }} </pre>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-row v-for="(entry, index) in this.messages" :key="index" class="pa-2">
-      <v-col>
-        <v-row>
-          >>> {{ entry.message }}
-        </v-row>
-        <v-row>
-          {{ entry.response }}
         </v-row>
       </v-col>
     </v-row>
@@ -37,7 +27,6 @@ export default {
   data() {
     return {
       input: '',
-      messages: [],
       isWait: false
     }
   },
@@ -48,16 +37,15 @@ export default {
         this.isWait = true;
         fetch(`/api/nwmessage`,
           {method: 'POST',
-            body: JSON.stringify({'message': this.formatMessage(),
+            body: JSON.stringify({'message': this.input,
+              'conversation': this.useApp.shells[this.terminal].conversation,
               'user-id': localStorage.getItem("id"),
               'chat-id': this.nbChat})})
           .then(response => response.json())
           .then(data => {
-            this.messages.push({response: data.response, message: this.input});
             this.useApp.addChat(this.terminal, this.input, data.response);
           }).catch(error => {
             console.log(error);
-          this.messages.push({response: 'Rompish 😴', message: this.input});
           this.useApp.addChat(this.terminal, this.input, 'Rompish 😴');
         }).finally(() => {
           this.input = ''
@@ -72,15 +60,6 @@ export default {
         this.useApp.setCommand(this.terminal, 'exit');
       }
     },
-    formatMessage() {
-      let res = "";
-      Object.values(this.useApp.shells[this.terminal].conversation).forEach((data) => {
-        res += `Q: ${data.message}\nA: ${data.output}\n`;
-      });
-      res+= `Q: ${this.input}\nA: `;
-      console.log(res)
-      return res;
-    }
   },
   props: {
     terminal: Number,
