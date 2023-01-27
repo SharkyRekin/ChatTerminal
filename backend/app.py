@@ -148,15 +148,21 @@ def new_chat():
     
 @app.route('/api/nwmessage', methods=['GET', 'POST'])
 def new_message():
-    user_id = request.args.get('user-id')
-    chat_id = request.args.get('chat-id')
-    message = request.args.get('message')
-    buff = communicate(message)
-    print(user_id, chat_id)
-    nmsg = Message(msg=message, chat_id=chat_id, output=buff)
+    req = request.get_json()
+    user_id = req['user-id']
+    chat_id = req['chat-id']
+    msg = req['message']
+    conversation = req['conversation']
+    conversation = conversation[:-3]
+    temp = ""
+    for elem in conversation:
+        temp += "Q: "+ elem['message'] + "\nA: " + elem['output'] + "\n"
+    temp += "Q: " + msg + "\nA: "
+    buff = communicate(temp)
+    nmsg = Message(msg=msg, chat_id=chat_id, output=buff)
     db.session.add(nmsg)
     db.session.commit()
-    return {'response': buff}
+    return {'response': buff.split("A: ")[-1]}
     
 @app.route('/api/dchat', methods=['GET', 'POST'])
 def delete_chat():
@@ -183,7 +189,6 @@ def get_current_user():
             buff['messages'].append(message.as_dict())
         chats.append(buff)
 
-    print(chats)
     return {"chats" : chats}
 
 if __name__ == "__main__":
