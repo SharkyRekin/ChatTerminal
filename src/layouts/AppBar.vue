@@ -3,7 +3,7 @@
     <v-tabs v-model="this.useApp.tabs" hide-slider height="32">
       <v-tab v-for="(n) in this.useApp.numberTabs" :key="n" :value="n">
         Chat {{ n }}
-        <v-icon v-if="this.useApp.numberTabs > 1" class="ms-2" @click="this.useApp.removeTab(n-1)">mdi-close</v-icon>
+        <v-icon class="ms-2" @click="this.useApp.removeTab(n-1)">mdi-close</v-icon>
       </v-tab>
     </v-tabs>
     <v-btn icon="mdi-plus" variant="text" size="32" @click="this.useApp.addTab()"/>

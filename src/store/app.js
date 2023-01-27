@@ -8,20 +8,15 @@ import * as bin from "@/store/commands/utils";
 export const useAppStore = defineStore('app', {
   state: () => ({
     currentTheme: 'light',
-    numberTabs: 1,
+    numberTabs: 0,
     tabs: null,
-    shells: [Shell(0)],
+    shells: [],
   }),
   actions: {
     clearTabs() {
       this.tabs = null;
       this.numberTabs = 0;
       this.shells = [];
-    },
-    resetTabs() {
-      this.tabs = null;
-      this.numberTabs = 1;
-      this.shells = [Shell(0)];
     },
     addTab() {
       this.numberTabs += 1;

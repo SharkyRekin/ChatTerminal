@@ -1,11 +1,11 @@
 <template>
-  <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].history" :key="index" class="pa-2">
+  <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].history" :key="index" class="pl-4 mt-0 mb-0">
     <v-col>
       <v-row>
-        <PS :terminal="this.terminal+1"/> {{ entry.command }}
+        <PS :terminal="this.terminal+1" class="mr-1"/> {{ entry.command }}
       </v-row>
-      <v-row>
-        <pre> {{ entry.output }} </pre>
+      <v-row class="pl-2">
+        <div v-html="entry.output"></div>
       </v-row>
     </v-col>
   </v-row>

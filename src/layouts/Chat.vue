@@ -37,7 +37,9 @@ export default {
         this.isWait = true;
         fetch(`/api/nwmessage`,
           {method: 'POST',
-	    headers: {'Content-Type':'application/json'},
+            headers: {
+              'Content-Type': 'application/json'
+            },
             body: JSON.stringify({'message': this.input,
               'conversation': this.useApp.shells[this.terminal].conversation,
               'user-id': localStorage.getItem("id"),

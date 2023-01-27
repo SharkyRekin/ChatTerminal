@@ -1,5 +1,5 @@
 <template>
-  <v-row class="pa-1 mt-0" v-if="this.useApp.shells[this.terminal].command !== 'chat'">
+  <v-row class="pl-4 pr-2 mt-0" v-if="this.useApp.shells[this.terminal].command !== 'chat'">
     <PS :terminal="this.terminal+1"/>
     <v-text-field
       v-model="input"
@@ -10,7 +10,7 @@
       density="compact">
     </v-text-field>
   </v-row>
-  <v-row class="pa-1 mt-0" v-if="this.useApp.shells[this.terminal].command === 'chat'">
+  <v-row class="pl-4 pr-2 mt-0" v-if="this.useApp.shells[this.terminal].command === 'chat'">
     <Chat :terminal="terminal" :nb-chat="this.useApp.shells[this.terminal].id"/>
   </v-row>
 </template>
@@ -50,7 +50,7 @@ export default {
 .v-text-field:deep(.v-field__input) {
     min-height: 0 !important;
     padding-top: 0 !important;
-    padding-left: 5px !important
+    padding-left: 4px !important
 }
 
 </style>
