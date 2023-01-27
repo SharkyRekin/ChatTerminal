@@ -2,7 +2,6 @@
   <v-row class="pa-2" v-if="this.useApp.shells[this.terminal].command !== 'chat'">
     <PS :terminal="this.terminal+1"/>
     <v-text-field
-      class="pa-0"
       v-model="input"
       variant="plain"
       dense
@@ -47,5 +46,11 @@ export default {
 </script>
 
 <style scoped>
+
+.v-text-field >>> .v-field__input {
+    min-height: 0px !important;
+    padding-top: 0px !important;
+    padding-left: 5px !important
+}
 
 </style>

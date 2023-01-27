@@ -21,10 +21,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-text-field pa-0 v-model="input" variant="plain" dense @keydown.enter="send" autofocus density="compact">
-        <template v-slot:prepend>
+      <v-text-field v-model="input" variant="plain" dense @keydown.enter="send" autofocus density="compact">
+        <!-- <template v-slot:prepend> -->
           >>>
-        </template>
+        <!-- </template> -->
       </v-text-field>
     </v-row>
   </v-col>
@@ -83,5 +83,9 @@ export default {
 </script>
 
 <style scoped>
-
+.v-text-field >>> .v-field__input {
+    min-height: 0px !important;
+    padding-top: 0px !important;
+    padding-left: 5px !important
+}
 </style>
