@@ -1,6 +1,6 @@
 <template>
   <v-col>
-    <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].conversation" :key="index" class="pa-2">
+    <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].conversation" :key="index" class="pa-1">
       <v-col>
         <v-row>
           >>> {{ entry.message }}
@@ -37,6 +37,7 @@ export default {
         this.isWait = true;
         fetch(`/api/nwmessage`,
           {method: 'POST',
+	    headers: {'Content-Type':'application/json'},
             body: JSON.stringify({'message': this.input,
               'conversation': this.useApp.shells[this.terminal].conversation,
               'user-id': localStorage.getItem("id"),
