@@ -1,6 +1,6 @@
 <template>
   <DefaultBar />
-  <v-main class="terminal overflow-hidden">
+  <v-main class="terminal">
     <v-window v-model="this.useApp.tabs" class="pa-2 ma-2 input">
       <v-window-item v-for="n in this.useApp.numberTabs" :key="n" :value="n" :transition="false">
         <History :terminal="n-1" />
@@ -42,7 +42,6 @@
   }
 
   .input {
-    overflow-y: auto;
     border: yellow 2px solid;
     border-radius: 12px;
     height: calc(100% - 15px);

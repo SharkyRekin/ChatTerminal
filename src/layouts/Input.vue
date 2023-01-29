@@ -10,7 +10,7 @@
       density="compact">
     </v-text-field>
   </v-row>
-  <v-row class="pl-4 pr-2 mt-0" v-if="this.useApp.shells[this.terminal].command === 'chat'">
+  <v-row class="pl-6 mt-0" v-if="this.useApp.shells[this.terminal].command === 'chat'">
     <Chat :terminal="terminal" :nb-chat="this.useApp.shells[this.terminal].id"/>
   </v-row>
 </template>

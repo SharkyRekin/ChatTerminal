@@ -18,12 +18,9 @@ export const useAppStore = defineStore('app', {
       this.numberTabs = 0;
       this.shells = [];
     },
-    addTab() {
-      this.numberTabs += 1;
-      this.tabs = (this.numberTabs - 1);
-      console.log(this.$state)
+    async addTab() {
       if (localStorage.getItem('username') !== 'guest') {
-        fetch(`/api/nwchat?user-id=${localStorage.getItem("id")}`)
+        await fetch(`/api/nwchat?user-id=${localStorage.getItem("id")}`)
           .then(res => res.json())
           .then(data => {
             this.shells.push(Shell(data.chatId));
@@ -31,6 +28,8 @@ export const useAppStore = defineStore('app', {
       } else {
         this.shells.push(Shell(this.numberTabs));
       }
+      this.numberTabs += 1;
+      this.tabs = (this.numberTabs - 1);
       console.log(this.$state);
     },
     setTab(i) {
@@ -79,7 +78,7 @@ export const useAppStore = defineStore('app', {
           break
         default:
           if (Object.keys(bin).indexOf(cmd) === -1) {
-            this.addHistory(`Command not found: ${cmd}. Try 'help' to get started.`);
+            this.addHistory(i, `Command not found: ${cmd}. Try 'help' to get started.`);
           } else {
             try {
               const output = await bin[cmd](args);

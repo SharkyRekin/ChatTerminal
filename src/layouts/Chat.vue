@@ -1,25 +1,26 @@
 <template>
   <v-col>
-    <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].conversation" :key="index" class="pa-1">
+    <v-row v-for="(entry, index) in this.useApp.shells[this.terminal].conversation" :key="index">
       <v-col>
         <v-row>
-          >>> {{ entry.message }}
+          >>>{{ entry.message }}
         </v-row>
-        <v-row>
-          <pre> {{ entry.output }} </pre>
+        <v-row class="pl-2">
+          <div v-html="entry.output"></div>
         </v-row>
       </v-col>
     </v-row>
     <v-row>
-      <v-text-field v-model="input" variant="plain" dense @keydown.enter="send" autofocus density="compact" :readonly="isWait">
-          >>>
+      <v-text-field v-model="input" :readonly="isWait" autofocus dense density="compact" variant="plain"
+                    @keydown.enter="send">
+        >>>
       </v-text-field>
     </v-row>
   </v-col>
 </template>
 
 <script>
-import { useAppStore } from "@/store/app";
+import {useAppStore} from "@/store/app";
 
 export default {
   name: "Chat",
@@ -36,19 +37,23 @@ export default {
       if (this.input !== 'exit') {
         this.isWait = true;
         fetch(`/api/nwmessage`,
-          {method: 'POST',
+          {
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({'message': this.input,
+            body: JSON.stringify({
+              'message': this.input,
               'conversation': this.useApp.shells[this.terminal].conversation,
               'user-id': localStorage.getItem("id"),
-              'chat-id': this.nbChat})})
+              'chat-id': this.nbChat
+            })
+          })
           .then(response => response.json())
           .then(data => {
             this.useApp.addChat(this.terminal, this.input, data.response);
           }).catch(error => {
-            console.log(error);
+          console.log(error);
           this.useApp.addChat(this.terminal, this.input, 'Rompish 😴');
         }).finally(() => {
           this.input = ''
@@ -57,7 +62,8 @@ export default {
       } else {
         let res = "";
         Object.values(this.useApp.shells[this.terminal].conversation).forEach((data) => {
-          res += `>>> ${data.message}\n${data.output}\n`;
+          res += `<v-row>>>>${data.message}</v-row></br>
+                  <v-row class="pl-2">${data.output}</v-row></br>`;
         });
         this.useApp.shells[this.terminal].history[this.useApp.shells[this.terminal].history.length - 1].output = res;
         this.useApp.setCommand(this.terminal, 'exit');
@@ -70,15 +76,15 @@ export default {
   },
   setup() {
     const useApp = useAppStore();
-    return { useApp }
+    return {useApp}
   }
 }
 </script>
 
 <style scoped>
 .v-text-field:deep(.v-field__input) {
-    min-height: 0 !important;
-    padding-top: 0 !important;
-    padding-left: 5px !important
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-left: 4px !important
 }
 </style>
