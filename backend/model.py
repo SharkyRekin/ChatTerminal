@@ -8,6 +8,11 @@ tokenizer = BloomTokenizerFast.from_pretrained("bigscience/bloom-560m")
 
 result_length = 20
 
+""" Main method to communicate with our bloom model
+
+Returns:
+    string: response from the model
+"""
 def communicate(prompt:str):
     inputs = tokenizer(prompt, return_tensors="pt")
     return tokenizer.decode(model.generate(inputs["input_ids"], 

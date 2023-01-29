@@ -6,6 +6,7 @@
       </v-row>
       <v-row class="pl-2">
         <div v-html="entry.output"></div>
+	<div id="weather"></div>
       </v-row>
     </v-col>
   </v-row>

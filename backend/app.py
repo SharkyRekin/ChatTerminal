@@ -7,6 +7,7 @@ from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 from model import communicate
 
+# Initialization of the flask app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'testsecretkey'
@@ -14,17 +15,27 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 
-
+# instantiate the login manager
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
+"""load a user from user id
+
+Returns:
+    User: return current user 
+"""
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+"""Main User class to instantiate the User table in the db
+
+Returns:
+    boolean: if the user is well created or not
+"""
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
@@ -32,6 +43,11 @@ class User(db.Model, UserMixin):
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
+"""Main Message class to instantiate the Message table in the db
+
+Returns:
+    boolean: if the message is well created or not
+"""
 class Message(db.Model):
     __tablename__ = "messages"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,6 +57,11 @@ class Message(db.Model):
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
+"""Main Chat class to instantiate the Chat table in the db
+
+Returns:
+    boolean: if the chat is well created or not
+"""
 class UserChat(db.Model):
     __tablename__ = "chats"
     user_id = db.Column(db.ForeignKey("user.id"))
@@ -48,23 +69,6 @@ class UserChat(db.Model):
     #message_id = db.Column(db.ForeignKey("messages.id"), nullable=True)
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-
-class RegisterFormFlask(FlaskForm):
-    username = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
-
-    password = PasswordField(validators=[
-                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
-    submit = SubmitField('Register')
-
-    def validate_username(self, username):
-        existing_user_username = User.query.filter_by(
-            username=username.data).first()
-        if existing_user_username:
-            raise ValidationError(
-                'That username already exists. Please choose a different one.')
             
 def validate_username(username):
     existing_user_username = User.query.filter_by(
@@ -75,21 +79,11 @@ def validate_username(username):
     return True
 
 
-class LoginForm(FlaskForm):
-    username = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+""" Route to login from the vue app, takes username and password and check validity
 
-    password = PasswordField(validators=[
-                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
-    submit = SubmitField('Login')
-
-
-@app.route('/')
-def home():
-    return render_template('home.html')
-
-
+Returns:
+    dict: dict containing user infos (if login success)
+"""
 @app.route('/api/login', methods=['GET', 'POST'])
 def login():
     username = request.args.get('username')
@@ -108,13 +102,11 @@ def login():
             'username':'guest',
             }
 
+"""Route to logout from the vue app
 
-@app.route('/api/dashboard', methods=['GET', 'POST'])
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
-
-
+Returns:
+    boolean: show if the logout success
+"""
 @app.route('/api/logout', methods=['GET', 'POST'])
 def logout():
     if current_user.is_authenticated:
@@ -124,6 +116,11 @@ def logout():
         
     
 
+"""Route to register from the vue app, password is encrypted in the db
+
+Returns:
+    boolean: true if well registered
+"""
 @ app.route('/api/register', methods=['GET', 'POST'])
 def register():
     username = request.args.get('username')
@@ -138,6 +135,11 @@ def register():
         return {'validation': True}
     return {'validation': False}
 
+"""Route to create a new chat in the db
+
+Returns:
+    int: int corresponding to the current chat ID
+"""
 @app.route('/api/nwchat', methods=['GET', 'POST'])
 def new_chat():
     user_id = request.args.get('user-id')
@@ -146,6 +148,12 @@ def new_chat():
     db.session.commit()
     return {'chatId': nchat.id}
     
+"""Route to create a new message in the db
+Chats and messages are both links to the logged in user
+
+Returns:
+    int: int corresponding to the current message ID
+"""
 @app.route('/api/nwmessage', methods=['GET', 'POST'])
 def new_message():
     req = request.get_json()
@@ -164,6 +172,11 @@ def new_message():
     db.session.commit()
     return {'response': buff.split("A: ")[-1]}
     
+"""Route to delete chat in the db
+
+Returns:
+    boolean: if well delete
+"""
 @app.route('/api/dchat', methods=['GET', 'POST'])
 def delete_chat():
     user_id = request.args.get('user-id')
@@ -173,12 +186,23 @@ def delete_chat():
     db.session.commit()
     return {'validation':True}
     
+"""Route to delete message in the db
+
+Returns:
+    boolean: if well delete
+"""
 @app.route('/api/dmessage', methods=['GET', 'POST'])
 def delete_message():
     message_id = request.args.get('message_id')
     Message.query.filter(Message.id >= message_id).delete()
     db.session.commit()
+    return {'validation':True}
     
+"""Route to get the current user
+
+Returns:
+    Chats: all the chats containing corresponding messages, they are use in history when logged in
+"""
 @app.route('/api/current_user', methods=["GET","POST"])
 def get_current_user():
     chats = []

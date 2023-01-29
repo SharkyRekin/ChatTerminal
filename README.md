@@ -55,3 +55,20 @@ pnpm lint
 ### Customize configuration
 
 See [Configuration Reference](https://vitejs.dev/config/).
+
+### Backend installation
+
+```
+cd backend
+python -m venv local
+source local/bin/activate
+pip install -r requirements.txt
+pip install transformers
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
+```
+### Launch backend
+
+```
+python app.py
+```
+

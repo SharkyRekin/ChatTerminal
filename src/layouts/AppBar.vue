@@ -12,6 +12,7 @@
     <v-btn icon="mdi-account" variant="text" class="ms-2" to="/login"></v-btn>
     <v-btn icon="mdi-logout" variant="text" class="ms-2" @click="logOut"></v-btn>
   </v-system-bar>
+
 </template>
 
 <script>
@@ -47,3 +48,6 @@ export default {
   },
 }
 </script>
+
+<style>
+</style>
